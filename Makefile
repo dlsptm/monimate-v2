@@ -70,53 +70,55 @@ sf: ## List all Symfony commands or pass the parameter "c=" to run a given comma
 cc: c=c:c ## Clear the cache
 
 
-phpcs:
+phpcs: ## Run PHP CS Fixer to automatically fix coding standards issues
 	PHP_CS_FIXER_IGNORE_ENV=1 ./vendor/bin/php-cs-fixer fix \
 	--verbose \
 	--show-progress=dots \
 	--config=.php-cs-fixer.dist.php \
 	--allow-risky=yes
 
-phpstan:
+phpstan: ## Run PHPStan static analysis with specified config and memory limit
 	@$(PHP) vendor/bin/phpstan analyse -c phpstan.dist.neon --memory-limit=1G
 
-dump:
+dump: ## Run var-dump-check to verify dumps and exclude specific directories
 	@$(PHP) vendor/bin/var-dump-check --no-colors --symfony --exclude bin --exclude config --exclude libraries --exclude public --exclude var --exclude vendor .
 
-db-drop:
+db-drop: ## Drop the database forcefully
 	@$(SYMFONY-CLI) doctrine:database:drop --force
 
-db-create:
+db-create: ## Create the database
 	@$(SYMFONY-CLI) doctrine:database:create
 
-db-diff:
+db-diff: ## Generate a new migration by comparing current schema to mapping
 	@$(SYMFONY-CLI) doctrine:migration:diff
 
-db-migrate:
+db-migrate: ## Execute database migrations
 	@$(SYMFONY-CLI) doctrine:migration:migrate
 
-entity:
+entity: ## Generate a new Doctrine entity
 	@$(SYMFONY-CLI) make:entity
 
-form:
+form: ## Generate a new form class
 	@$(SYMFONY-CLI) make:form
 
-controller:
+controller: ## Generate a new controller class
 	@$(SYMFONY-CLI) make:controller
 
-pre-commit:
+## —— Git 🔧 ———————————————————————————————————————————————————————————————
+
+pre-commit: ## Run checks before committing: dump verification, code style fix, and static analysis
 	make dump
 	make phpcs
 	make phpstan
 
-commit:
+commit: ## Commit and push changes to all remotes
 ifndef e
-	$(error Veuillez passer un message de commit avec e="votre message")
+	$(error Please provide a commit message using e="your message")
 endif
 	git add .
 	git commit -m "$(e)"
 	git push all
 
-fetch:
+fetch: ## Fetch latest changes from origin and github remotes
 	git fetch origin
 	git fetch github
