@@ -15,9 +15,10 @@ RUN apt-get update && apt-get install -y \
         gcc \
         g++ \
         make \
+        libpq-dev \
     && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs \
-    && docker-php-ext-install -j$(nproc) intl pdo pdo_mysql zip opcache bcmath sockets \
+    && docker-php-ext-install -j$(nproc) intl pdo pdo_pgsql pgsql zip opcache bcmath sockets \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
     && apt-get purge -y --auto-remove autoconf gcc g++ make \

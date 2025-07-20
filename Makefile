@@ -3,6 +3,7 @@ DOCKER_COMP = docker compose
 
 # Docker containers
 PHP_CONT = $(DOCKER_COMP) exec php
+DATABASE_CONT = $(DOCKER_COMP) exec database
 
 # Executables
 PHP      = $(PHP_CONT) php
@@ -32,21 +33,24 @@ ps: ## See running containers
 	@$(DOCKER_COMP) ps
 
 up: ## Start the docker hub in detached mode (no logs)
-	@$(DOCKER_COMP) up --detach
+	@$(DOCKER_COMP) --env-file .env.local up --detach
 
 start: build up ## Build and start the containers
 
 down: ## Stop the docker hub
 	@$(DOCKER_COMP) down --remove-orphans
 
+reset:
+	@$(DOCKER_COMP) down --volumes --rmi all
+
 logs: ## Show live logs
 	@$(DOCKER_COMP) logs --tail=0 --follow
 
-sh: ## Connect to the FrankenPHP container
+psh: ## Connect to the PHP container
 	@$(PHP_CONT) sh
 
-bash: ## Connect to the FrankenPHP container via bash so up and down arrows go to previous commands
-	@$(PHP_CONT) bash
+dsh: ## Connect to the DATABASE container
+	@$(DATABASE_CONT) sh
 
 test: ## Start tests with phpunit, pass the parameter "c=" to add options to phpunit, example: make test c="--group e2e --stop-on-failure"
 	@$(eval c ?=)
@@ -67,7 +71,8 @@ sf: ## List all Symfony commands or pass the parameter "c=" to run a given comma
 	@$(eval c ?=)
 	@$(SYMFONY-CLI) $(c)
 
-cc: c=c:c ## Clear the cache
+cc: ## Clear the cache
+	@$(SYMFONY-CLI) c:c
 
 
 phpcs: ## Run PHP CS Fixer to automatically fix coding standards issues
@@ -96,27 +101,29 @@ db-migrate: ## Execute database migrations
 	@$(SYMFONY-CLI) doctrine:migration:migrate
 
 entity: ## Generate a new Doctrine entity
-	@$(SYMFONY-CLI) make:entity
+	@$(eval c ?=)
+	@$(SYMFONY-CLI) make:entity $(c)
 
 form: ## Generate a new form class
-	@$(SYMFONY-CLI) make:form
+	@$(eval c ?=)
+	@$(SYMFONY-CLI) make:form $(c)
 
 controller: ## Generate a new controller class
-	@$(SYMFONY-CLI) make:controller
+	@$(eval c ?=)
+	@$(SYMFONY-CLI) make:controller $(c)
 
 ## —— Git 🔧 ———————————————————————————————————————————————————————————————
-
 pre-commit: ## Run checks before committing: dump verification, code style fix, and static analysis
 	make dump
 	make phpcs
 	make phpstan
 
 commit: ## Commit and push changes to all remotes
-ifndef e
-	$(error Please provide a commit message using e="your message")
+ifndef c
+	$(error Please provide a commit message using c="your message")
 endif
 	git add .
-	git commit -m "$(e)"
+	git commit -m "$(c)"
 	git push all
 
 fetch: ## Fetch latest changes from origin and github remotes
