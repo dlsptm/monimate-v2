@@ -1,5 +1,6 @@
 {
     "scripts": {
+        "watch": "encore dev --watch",
         "dev": "encore dev",
         "build": "encore production"
     },

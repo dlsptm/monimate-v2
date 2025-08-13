@@ -34,7 +34,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $lastLogin = null;
 
     #[ORM\Column(type: Types::TEXT)]

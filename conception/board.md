@@ -101,3 +101,34 @@ C’est long, mais le projet commence à bien prendre forme 😊
 ### Next
 - [ ] Créer un Trello
 - [ ] OAuth via Google Login et  Apple Login
+
+---
+
+## 13 Août 2025
+**16h – 20h** (4 heures)
+
+### OAuth via Google Login
+- Intégration de l'authentification Google avec les packages suivants :
+
+```json
+"knpuniversity/oauth2-client-bundle": "^2.18",
+"league/oauth2-google": "^4.0"
+```
+  
+- Configuration des fichiers :  
+  - `knpu_oauth2_client.yaml`  
+  - `security.yaml`  
+- Création du `GoogleAuthenticator` et du `GoogleController` pour gérer l'authentification.  
+
+### Diagramme et architecture
+- Réalisation d’un diagramme de classes représentant l’authentification classique et via Google, ainsi que l’enregistrement des utilisateurs.  
+
+### Gestion du projet
+- Création du [Trello](https://trello.com/b/h5Jq6vzv/monimate) pour organiser les tâches et le suivi du projet.  
+
+### Front-end / SCSS
+- Début de la mise en place des styles SCSS.  
+
+### Next
+- Continuer la mise en place du front (SCSS).  
+- Ajouter Apple Login pour l’authentification OAuth.

@@ -6,8 +6,6 @@ import './bootstrap.js';
  * which should already be in your base.html.twig.
  */
 import 'jquery';
-import 'popper.js';
+//import 'popper.js';
 import 'bootstrap';
 import './styles/app.scss';
-
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
